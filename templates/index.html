@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Weather App</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Weather App</h1>
+      <form id="weatherForm">
+        <input
+          type="text"
+          id="cityInput"
+          placeholder="Enter City Name"
+          required
+        />
+        <button type="submit">Get Weather</button>
+      </form>
+      <div id="result" class="weather-result"></div>
+    </div>
+
+    <script>
+      document
+        .getElementById("weatherForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const city = document.getElementById("cityInput").value;
+          fetch(`/weather?city=${city}`)
+            .then((response) => response.json())
+            .then((data) => {
+              const resultDiv = document.getElementById("result");
+              if (data.error) {
+                resultDiv.innerHTML = `<p class="error">${data.error}</p>`;
+              } else {
+                resultDiv.innerHTML = `
+                            <h2>${data.city}</h2>
+                            <img src="http://openweathermap.org/img/wn/${data.icon}@2x.png" alt="icon">
+                            <p>${data.temperature}°C - ${data.description}</p>
+                        `;
+              }
+            });
+        });
+    </script>
+  </body>
+</html>
