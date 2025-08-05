@@ -7,7 +7,9 @@
   </head>
   <body>
     <div class="container">
-      <h1>Weather App</h1>
+      <h1>⛅ Weather App</h1>
+
+      <!-- Get Weather Form -->
       <form id="weatherForm">
         <input
           type="text"
@@ -17,28 +19,94 @@
         />
         <button type="submit">Get Weather</button>
       </form>
-      <div id="result" class="weather-result"></div>
+      <div id="weatherResult" class="weather-result-container"></div>
+
+      <hr style="margin: 30px 0" />
+
+      <!-- Add City -->
+      <button id="toggleAddCityBtn">Add City</button>
+
+      <form id="addCityForm" style="display: none; margin-top: 10px">
+        <input type="text" id="addCityInput" placeholder="Search" required />
+        <button type="submit">Add</button>
+      </form>
+
+      <!-- Dynamic Cards -->
+      <div id="cityCards" class="weather-result-container"></div>
     </div>
 
     <script>
+      // GET Weather Form
       document
         .getElementById("weatherForm")
         .addEventListener("submit", function (e) {
           e.preventDefault();
-          const city = document.getElementById("cityInput").value;
-          fetch(`/weather?city=${city}`)
-            .then((response) => response.json())
+          const city = document.getElementById("cityInput").value.trim();
+          if (!city) return;
+
+          fetch(`/weather?city=${encodeURIComponent(city)}`)
+            .then((res) => res.json())
             .then((data) => {
-              const resultDiv = document.getElementById("result");
+              const resultDiv = document.getElementById("weatherResult");
               if (data.error) {
-                resultDiv.innerHTML = `<p class="error">${data.error}</p>`;
+                resultDiv.innerHTML = `<div class="weather-card error"><p>${data.error}</p></div>`;
               } else {
                 resultDiv.innerHTML = `
+                            <div class="weather-card">
+                                <h2>${data.city}</h2>
+                                <img src="http://openweathermap.org/img/wn/${data.icon}@2x.png">
+                                <p>${data.temperature}°C - ${data.description}</p>
+                            </div>
+                        `;
+              }
+            });
+        });
+
+      // Toggle Add City Form
+      const toggleBtn = document.getElementById("toggleAddCityBtn");
+      const addForm = document.getElementById("addCityForm");
+      toggleBtn.addEventListener("click", () => {
+        addForm.style.display =
+          addForm.style.display === "none" ? "block" : "none";
+      });
+
+      // ADD City Form
+      document
+        .getElementById("addCityForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const city = document.getElementById("addCityInput").value.trim();
+          if (!city) return;
+
+          fetch(`/weather?city=${encodeURIComponent(city)}`)
+            .then((res) => res.json())
+            .then((data) => {
+              const cityCards = document.getElementById("cityCards");
+              const card = document.createElement("div");
+              card.className = "weather-card";
+
+              if (data.error) {
+                card.classList.add("error");
+                card.innerHTML = `<p>${data.error}</p>`;
+              } else {
+                card.innerHTML = `
+                            <button class="remove-btn">x</button>
                             <h2>${data.city}</h2>
-                            <img src="http://openweathermap.org/img/wn/${data.icon}@2x.png" alt="icon">
+                            <img src="http://openweathermap.org/img/wn/${data.icon}@2x.png">
                             <p>${data.temperature}°C - ${data.description}</p>
                         `;
               }
+
+              cityCards.appendChild(card);
+              document.getElementById("addCityInput").value = "";
+              addForm.style.display = "none";
+
+              // Remove Card Event
+              card
+                .querySelector(".remove-btn")
+                .addEventListener("click", () => {
+                  card.remove();
+                });
             });
         });
     </script>
