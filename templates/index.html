@@ -78,7 +78,7 @@
           const city = document.getElementById("addCityInput").value.trim();
           if (!city) return;
 
-          fetch(`/weather?city=${encodeURIComponent(city)}`)
+          fetch(`/add-weather?city=${encodeURIComponent(city)}`)
             .then((res) => res.json())
             .then((data) => {
               const cityCards = document.getElementById("cityCards");
