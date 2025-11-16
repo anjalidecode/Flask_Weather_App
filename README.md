@@ -17,16 +17,6 @@ A simple weather app using Flask, SQLite, and OpenWeatherMap API. Users can chec
 - API: OpenWeatherMap
 - Tools: VS Code, venv
 
-📁 Project Structure
-Flask_Weather_App/
-├── app.py
-├── requirements.txt
-├── weather.db
-├── static/
-│   ├── styles.css
-└── templates/
-    └── index.html
-
 ⚙️ Setup
 1. Clone:  
    git clone https://github.com/anjalidecode/Flask_Weather_App.git  
