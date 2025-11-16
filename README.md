@@ -39,8 +39,8 @@ Flask_Weather_App/
    API_KEY=your_api_key
 4. (Optional) Init DB:  
    python  
-   >>> from app import init_db  
-   >>> init_db()
+   from app import init_db  
+   init_db()
 5. Run:  
    python app.py
 
